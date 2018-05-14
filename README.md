@@ -1,3 +1,10 @@
-# machine-learning-scripts
+# How To Use
 
- This repository is a miscellaneous collection of scripts and tools related to machine learning. Currently consists of Jupyter notebooks in the `notebooks` subdirectory, and example SLURM scripts in `slurm`. Materials related to specific courses can be found in the `courses` subdirectory. 
+Open CS434 ssh in Putty
+Open Bash
+cd /
+source /scratch/cs434spring2018/env_3.5_pytorch/bin/activate\
+cd /nfs/stak/users/USERNAME
+
+To Run:
+python FILENAME.py
