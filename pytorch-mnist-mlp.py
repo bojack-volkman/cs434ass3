@@ -6,19 +6,19 @@ from torchvision import datasets, transforms
 from torch.autograd import Variable
 
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
 
 cuda = torch.cuda.is_available()
 print('Using PyTorch version:', torch.__version__, 'CUDA:', cuda)
 
-#torch.manual_seed(42)
-#if cuda:
-#    torch.cuda.manual_seed(42)
+torch.manual_seed(42)
+if cuda:
+    torch.cuda.manual_seed(42)
 
 batch_size = 32
 
-kwargs = {'num_workers': 4, 'pin_memory': True} if cuda else {}
+kwargs = {'num_workers': 8, 'pin_memory': True} if cuda else {}
 
 train_loader = torch.utils.data.DataLoader(
     datasets.CIFAR10('../data', train=True, download=True,
@@ -41,13 +41,13 @@ for (X_train, y_train) in train_loader:
     break
 
 pltsize=1
-#plt.figure(figsize=(10*pltsize, pltsize))
+plt.figure(figsize=(10*pltsize, pltsize))
 
-#for i in range(10):
-#    plt.subplot(1,10,i+1)
-#    plt.axis('off')
-#    plt.imshow(X_train[i,:,:,:].numpy().reshape(28,28), cmap="gray")
-#    plt.title('Class: '+str(y_train[i]))
+for i in range(10):
+    plt.subplot(1,10,i+1)
+    plt.axis('off')
+    plt.imshow(X_train[i,:,:,:].numpy().reshape(28,28), cmap="gray")
+    plt.title('Class: '+str(y_train[i]))
 
 class Net(nn.Module):
     def __init__(self):
