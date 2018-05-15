@@ -13,3 +13,7 @@ cd /nfs/stak/users/USERNAME
 
 To Run:
 python FILENAME.py
+
+# cs434ass3
+Machine Learning and Data Mining Russell, Sherburne, Volkman
+
