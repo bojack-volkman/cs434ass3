@@ -18,20 +18,20 @@ print('Using PyTorch version:', torch.__version__, 'CUDA:', cuda)
 
 batch_size = 32
 
-kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
+kwargs = {'num_workers': 4, 'pin_memory': True} if cuda else {}
 
 train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('../data', train=True, download=True,
+    datasets.CIFAR10('../data', train=True, download=True,
                    transform=transforms.Compose([
                        transforms.ToTensor(),
-                       transforms.Normalize((0.1307,), (0.3081,))
+                       transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))
                    ])),
     batch_size=batch_size, shuffle=True, **kwargs)
 
 validation_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('../data', train=False, transform=transforms.Compose([
+    datasets.CIFAR10('../data', train=False, transform=transforms.Compose([
                        transforms.ToTensor(),
-                       transforms.Normalize((0.1307,), (0.3081,))
+                       transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))
                    ])),
     batch_size=batch_size, shuffle=False, **kwargs)
 	
@@ -52,19 +52,21 @@ pltsize=1
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(28*28, 50)
-        self.fc1_drop = nn.Dropout(0.2)
-        self.fc2 = nn.Linear(50, 50)
-        self.fc2_drop = nn.Dropout(0.2)
-        self.fc3 = nn.Linear(50, 10)
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 100)
+        #self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(100, 10)
 
     def forward(self, x):
-        x = x.view(-1, 28*28)
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.fc1(x))
-        x = self.fc1_drop(x)
-        x = F.relu(self.fc2(x))
-        x = self.fc2_drop(x)
-        return F.log_softmax(self.fc3(x))
+        #x = F.relu(self.fc2(x))
+        x = F.log_softmax(self.fc3(x))
+        return x
 
 model = Net()
 if cuda:
